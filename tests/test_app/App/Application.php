@@ -1,0 +1,63 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Copyright 2019 Cake Development Corporation, Las Vegas, Nevada (702) 425-5085 www.cakedc.com use and restrictions are governed by Section 8.5 of The Professional Services Agreement.
+ * Redistribution is prohibited. All Rights Reserved.
+ */
+
+namespace CakeDC\SearchFilter\Test\App;
+
+use Cake\Http\BaseApplication;
+use Cake\Http\MiddlewareQueue;
+use Cake\Routing\Route\DashedRoute;
+use Cake\Routing\RouteBuilder;
+
+/**
+ * Application setup class.
+ *
+ * This defines the bootstrapping logic and middleware layers you
+ * want to use in your application.
+ */
+class Application extends BaseApplication
+{
+    /**
+     * @inheritDoc
+     */
+    public function bootstrap(): void
+    {
+        parent::bootstrap();
+
+        $this->addPlugin('CakeDC/SearchFilter', [
+            // 'path' => ROOT . DS,
+            // 'autoload' => true,
+        ]);
+    }
+
+    /**
+     * Setup the middleware your application will use.
+     *
+     * @param \Cake\Http\MiddlewareQueue $middleware The middleware queue to setup.
+     * @return \Cake\Http\MiddlewareQueue The updated middleware.
+     */
+    public function middleware(MiddlewareQueue $middleware): MiddlewareQueue
+    {
+        \Cake\Routing\Router::reload();
+        $middleware
+            ->add(new \Cake\Error\Middleware\ErrorHandlerMiddleware())
+            ->add(new \Cake\Routing\Middleware\AssetMiddleware())
+            ->add(new \Cake\Routing\Middleware\RoutingMiddleware($this));
+
+        return $middleware;
+    }
+
+    public function routes(RouteBuilder $routes): void
+    {
+        $routes->setRouteClass(DashedRoute::class);
+        $routes->scope('/', function (RouteBuilder $builder) {
+            $builder->fallbacks();
+        });
+
+        parent::routes($routes);
+    }
+}
