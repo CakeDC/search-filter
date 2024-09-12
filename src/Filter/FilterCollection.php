@@ -13,6 +13,7 @@ use Countable;
 use Exception;
 use IteratorAggregate;
 use Traversable;
+use function Cake\I18n\__;
 
 /**
  * FilterCollection class

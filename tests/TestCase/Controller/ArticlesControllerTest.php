@@ -10,7 +10,7 @@ class ArticlesControllerTest extends TestCase
 {
     use IntegrationTestTrait;
 
-    protected $fixtures = [
+    protected array $fixtures = [
         'plugin.CakeDC/SearchFilter.Articles',
         'plugin.CakeDC/SearchFilter.Authors',
     ];

@@ -8,10 +8,14 @@ declare(strict_types=1);
 
 namespace CakeDC\SearchFilter\Test\App;
 
+use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
 use Cake\Http\MiddlewareQueue;
+use Cake\Routing\Middleware\AssetMiddleware;
+use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\Routing\Route\DashedRoute;
 use Cake\Routing\RouteBuilder;
+use Cake\Routing\Router;
 
 /**
  * Application setup class.
@@ -42,11 +46,11 @@ class Application extends BaseApplication
      */
     public function middleware(MiddlewareQueue $middleware): MiddlewareQueue
     {
-        \Cake\Routing\Router::reload();
+        Router::reload();
         $middleware
-            ->add(new \Cake\Error\Middleware\ErrorHandlerMiddleware())
-            ->add(new \Cake\Routing\Middleware\AssetMiddleware())
-            ->add(new \Cake\Routing\Middleware\RoutingMiddleware($this));
+            ->add(new ErrorHandlerMiddleware())
+            ->add(new AssetMiddleware())
+            ->add(new RoutingMiddleware($this));
 
         return $middleware;
     }

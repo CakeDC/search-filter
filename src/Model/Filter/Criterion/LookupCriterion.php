@@ -10,7 +10,7 @@ namespace CakeDC\SearchFilter\Model\Filter\Criterion;
 
 use Cake\Database\Expression\QueryExpression;
 use Cake\Database\ExpressionInterface;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
 use CakeDC\SearchFilter\Filter\AbstractFilter;
@@ -46,14 +46,14 @@ class LookupCriterion extends BaseCriterion
     /**
      * Finder method
      *
-     * @param \Cake\ORM\Query<\Cake\Datasource\EntityInterface> $query
+     * @param \Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface> $query
      * @param string $condition
      * @param array<string, mixed> $values
      * @param array<string, mixed> $criteria
      * @param array<string, mixed> $options
-     * @return \Cake\ORM\Query<\Cake\Datasource\EntityInterface>
+     * @return \Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface>
      */
-    public function __invoke(Query $query, string $condition, array $values, array $criteria, array $options): Query
+    public function __invoke(SelectQuery $query, string $condition, array $values, array $criteria, array $options): SelectQuery
     {
         $filter = $this->buildFilter($condition, $values, $criteria, $options);
         if (!empty($filter)) {

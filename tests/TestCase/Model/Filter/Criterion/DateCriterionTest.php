@@ -10,7 +10,7 @@ namespace CakeDC\SearchFilter\Test\TestCase\Model\Filter\Criterion;
 
 use Cake\Database\Expression\QueryExpression;
 use Cake\Database\ValueBinder;
-use Cake\I18n\FrozenDate;
+use Cake\I18n\Date;
 use Cake\TestSuite\TestCase;
 use CakeDC\SearchFilter\Filter\AbstractFilter;
 use CakeDC\SearchFilter\Model\Filter\Criterion\DateCriterion;
@@ -288,8 +288,8 @@ class DateCriterionTest extends TestCase
         $bindings = $valueBinder->bindings();
         $this->assertArrayHasKey(':c0', $bindings);
         $this->assertArrayHasKey(':c1', $bindings);
-        $this->assertEquals(new FrozenDate('2023-05-01'), $bindings[':c0']['value']);
-        $this->assertEquals(new FrozenDate('2023-05-31'), $bindings[':c1']['value']);
+        $this->assertEquals(new Date('2023-05-01'), $bindings[':c0']['value']);
+        $this->assertEquals(new Date('2023-05-31'), $bindings[':c1']['value']);
     }
 
     /**

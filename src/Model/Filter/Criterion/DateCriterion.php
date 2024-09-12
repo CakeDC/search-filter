@@ -13,8 +13,9 @@ use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Database\ExpressionInterface;
 use Cake\Database\FunctionsBuilder;
-use Cake\I18n\FrozenDate;
-use Cake\ORM\Query;
+use Cake\I18n\Date;
+use Cake\I18n\DateTime;
+use Cake\ORM\Query\SelectQuery;
 use CakeDC\SearchFilter\Filter\AbstractFilter;
 
 class DateCriterion extends BaseCriterion
@@ -61,14 +62,14 @@ class DateCriterion extends BaseCriterion
     /**
      * Finder method
      *
-     * @param \Cake\ORM\Query<\Cake\Datasource\EntityInterface> $query
+     * @param \Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface> $query
      * @param string $condition
      * @param array<string, mixed> $values
      * @param array<string, mixed> $criteria
      * @param array<string, mixed> $options
-     * @return \Cake\ORM\Query<\Cake\Datasource\EntityInterface>
+     * @return \Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface>
      */
-    public function __invoke(Query $query, string $condition, array $values, array $criteria, array $options): Query
+    public function __invoke(SelectQuery $query, string $condition, array $values, array $criteria, array $options): SelectQuery
     {
         $filter = $this->buildFilter($condition, $values, $criteria, $options);
         if (!empty($filter)) {
@@ -180,10 +181,10 @@ class DateCriterion extends BaseCriterion
      * Create a date/time object from a string
      *
      * @param string $dateStr
-     * @return \DateTimeInterface
+     * @return \Cake\I18n\Date|\Cake\I18n\DateTime
      */
-    protected function prepareTime(string $dateStr): \DateTimeInterface
+    protected function prepareTime(string $dateStr): DateTime|Date
     {
-        return FrozenDate::createFromFormat($this->format, $dateStr);
+        return Date::createFromFormat($this->format, $dateStr);
     }
 }

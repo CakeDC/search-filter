@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace CakeDC\SearchFilter\Test\App\Controller;
 
 use CakeDC\SearchFilter\Manager;
+use stdClass;
 
 /**
  * Articles Controller
@@ -56,7 +57,7 @@ class ArticlesController extends AppController
 
         $collection->add('search', $manager->filters()
             ->new('string')
-            ->setConditions(new \stdClass())
+            ->setConditions(new stdClass())
             ->setLabel('Search...'));
 
         $collection->add('name', $manager->filters()
@@ -88,7 +89,7 @@ class ArticlesController extends AppController
             ]);
 
             $filters = $manager->formatFinders($search);
-            $query = $query->find('filters', $filters);
+            $query = $query->find('filters', params: $filters);
         }
 
         $query = $this->Filter->prg($query);

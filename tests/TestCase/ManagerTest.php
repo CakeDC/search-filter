@@ -17,6 +17,7 @@ use CakeDC\SearchFilter\Filter\FilterInterface;
 use CakeDC\SearchFilter\Filter\FilterRegistry;
 use CakeDC\SearchFilter\Manager;
 use CakeDC\SearchFilter\Model\Filter\Criterion\CriteriaBuilder;
+use ReflectionClass;
 
 class ManagerTest extends TestCase
 {
@@ -74,7 +75,7 @@ class ManagerTest extends TestCase
         $mockRegistry = $this->createMock(FilterRegistry::class);
         $mockRegistry->method('load')->willReturn($mockFilter);
 
-        $reflectionManager = new \ReflectionClass($this->manager);
+        $reflectionManager = new ReflectionClass($this->manager);
         $filtersProperty = $reflectionManager->getProperty('_filters');
         $filtersProperty->setAccessible(true);
         $filtersProperty->setValue($this->manager, $mockRegistry);

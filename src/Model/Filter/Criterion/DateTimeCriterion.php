@@ -9,7 +9,8 @@ declare(strict_types=1);
 namespace CakeDC\SearchFilter\Model\Filter\Criterion;
 
 use Cake\Database\ExpressionInterface;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\Date;
+use Cake\I18n\DateTime;
 
 class DateTimeCriterion extends DateCriterion
 {
@@ -29,10 +30,10 @@ class DateTimeCriterion extends DateCriterion
      * Create a date/time object from a string
      *
      * @param string $dateStr
-     * @return \DateTimeInterface
+     * @return \Cake\I18n\Date|\Cake\I18n\DateTime
      */
-    protected function prepareTime(string $dateStr): \DateTimeInterface
+    protected function prepareTime(string $dateStr): DateTime|Date
     {
-        return FrozenTime::createFromFormat($this->format, $dateStr);
+        return DateTime::createFromFormat($this->format, $dateStr);
     }
 }

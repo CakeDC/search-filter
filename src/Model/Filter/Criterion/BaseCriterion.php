@@ -11,8 +11,8 @@ namespace CakeDC\SearchFilter\Model\Filter\Criterion;
 use Cake\Database\Expression\ComparisonExpression;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Database\ExpressionInterface;
-use Cake\I18n\FrozenDate;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\Date;
+use Cake\I18n\DateTime;
 use Cake\Utility\Hash;
 use CakeDC\SearchFilter\Filter\AbstractFilter;
 
@@ -92,9 +92,9 @@ abstract class BaseCriterion implements CriterionInterface
         }
         if ($condition == AbstractFilter::COND_EQ) {
             return function (QueryExpression $expr) use ($field, $value, $type): QueryExpression {
-                if ($value instanceof FrozenDate) {
+                if ($value instanceof Date) {
                     $value = $value->format('Y-m-d');
-                } elseif ($value instanceof FrozenTime) {
+                } elseif ($value instanceof DateTime) {
                     $value = $value->format('Y-m-d H:i');
                 }
 
@@ -111,9 +111,9 @@ abstract class BaseCriterion implements CriterionInterface
             ])
         ) {
             return function (QueryExpression $expr) use ($field, $value, $type, $condition): QueryExpression {
-                if ($value instanceof FrozenDate) {
+                if ($value instanceof Date) {
                     $value = $value->format('Y-m-d');
-                } elseif ($value instanceof FrozenTime) {
+                } elseif ($value instanceof DateTime) {
                     $value = $value->format('Y-m-d H:i');
                 }
 

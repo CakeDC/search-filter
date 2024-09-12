@@ -8,10 +8,11 @@ declare(strict_types=1);
 
 namespace CakeDC\SearchFilter\Model\Filter;
 
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use PlumSearch\Model\Filter\AbstractFilter;
 use PlumSearch\Model\Filter\Exception\MissingFilterException;
 use PlumSearch\Model\FilterRegistry;
+use function Cake\I18n\__;
 
 /**
  * Class CriteriaFilter
@@ -44,13 +45,15 @@ class CriteriaFilter extends AbstractFilter
     /**
      * Returns query with applied filter
      *
-     * @param \Cake\ORM\Query<\Cake\Datasource\EntityInterface> $query Query.
+     * @param \Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface> $query Query.
      * @param string $field Field name.
-     * @param array<string, mixed> $value Field value.
+     * @param string|array $value Field value.
      * @param array<string, mixed> $data Filters values.
-     * @return \Cake\ORM\Query<\Cake\Datasource\EntityInterface>
+     * @return \Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface>
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
+     * @phpstan-param array<string, array{condition: string, value: mixed}>|string $value
      */
-    protected function _buildQuery(Query $query, string $field, $value, array $data = []): Query
+    protected function _buildQuery(SelectQuery $query, string $field, $value, array $data = []): SelectQuery
     {
         $criteria = $this->getConfig('criteria');
         foreach ($value as $name => $values) {
