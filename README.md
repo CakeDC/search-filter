@@ -14,6 +14,7 @@ Versions and branches
 | ^5.0            | [2.0](https://github.com/cakedc/users/tree/2.next-cake5)                      | 2.0.0 | stable |
 | ^4.5            | [1.0](https://github.com/cakedc/search-filter/tree/1.next-cake4)              | 1.0.0 | stable |
 
+
 ## Overview
 
 The SearchFilter plugin is a powerful and flexible solution for implementing advanced search functionality in CakePHP applications. It provides a robust set of tools for creating dynamic, user-friendly search interfaces with minimal effort.
@@ -111,7 +112,7 @@ class PostsController extends AppController
             ]);
 
             $filters = $manager->formatFinders($search);
-            $query = $query->find('filters', $filters);
+            $query = $query->find('filters', params: $filters);
         }
 
         // Paginate the results

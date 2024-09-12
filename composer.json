@@ -5,13 +5,12 @@
     "license": "MIT",
     "require": {
         "php": ">=8.1",
-        "cakephp/cakephp": "^4.4",
-        "skie/cakephp-search": "^4.0"
+        "cakephp/cakephp": "^5.0",
+        "skie/cakephp-search": "^5.0"
     },
     "require-dev": {
-        "cakephp/cakephp-codesniffer": "^4.0",
-        "slevomat/coding-standard": "^8.0",
-        "phpunit/phpunit": "^9.5"
+        "cakephp/cakephp-codesniffer": "^5.0",
+        "phpunit/phpunit": "^10.0"
     },
     "scripts": {
         "fixcode": [
@@ -29,7 +28,7 @@
         "test": "phpunit --stderr",
         "coverage-test": "phpunit --stderr --coverage-clover=clover.xml",
         "stan": "phpstan.phar analyse --memory-limit=-1 src/",
-        "stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan:0.12.94 psalm/phar:~4.9.2 && mv composer.backup composer.json",
+        "stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan:^1.9.0 psalm/phar:^5.1.0 && mv composer.backup composer.json",
         "psalm": "psalm.phar --show-info=false",
         "stan-rebuild-baseline": "phpstan.phar analyse ./src/ --generate-baseline",
         "cs-check": "phpcs -n -p ./src ./tests",
@@ -43,7 +42,7 @@
     "autoload-dev": {
         "psr-4": {
             "CakeDC\\SearchFilter\\Test\\": "tests/",
-            "CakeDC\\SearchFilter\\Test\\App\\": "tests/test_app/App/",
+			"CakeDC\\SearchFilter\\Test\\App\\": "tests/test_app/App/",
             "Cake\\Test\\": "vendor/cakephp/cakephp/tests/"
         }
     },

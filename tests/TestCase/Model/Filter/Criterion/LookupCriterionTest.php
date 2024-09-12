@@ -21,7 +21,7 @@ class LookupCriterionTest extends TestCase
      *
      * @var array<string>
      */
-    protected $fixtures = [
+    protected array $fixtures = [
         'plugin.CakeDC/SearchFilter.Articles',
         'plugin.CakeDC/SearchFilter.Authors',
     ];

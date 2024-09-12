@@ -10,7 +10,7 @@ namespace CakeDC\SearchFilter\Test\TestCase\Model\Filter\Criterion;
 
 use Cake\Database\Expression\QueryExpression;
 use Cake\Database\ValueBinder;
-use Cake\I18n\FrozenDate;
+use Cake\I18n\DateTime;
 use Cake\TestSuite\TestCase;
 use CakeDC\SearchFilter\Filter\AbstractFilter;
 use CakeDC\SearchFilter\Model\Filter\Criterion\DateTimeCriterion;
@@ -181,8 +181,8 @@ class DateTimeCriterionTest extends TestCase
         $sql = $modifiedExpression->sql($valueBinder);
 
         $this->assertStringContainsString('test_datetime BETWEEN :c0 AND :c1', $sql);
-        $this->assertEquals(new FrozenDate('2023-05-01 00:00'), $valueBinder->bindings()[':c0']['value']);
-        $this->assertEquals(new FrozenDate('2023-05-31 00:00'), $valueBinder->bindings()[':c1']['value']);
+        $this->assertEquals(new DateTime('2023-05-01 00:00'), $valueBinder->bindings()[':c0']['value']);
+        $this->assertEquals(new DateTime('2023-05-31 00:00'), $valueBinder->bindings()[':c1']['value']);
     }
 
     /**

@@ -18,5 +18,5 @@ class MissingFilterException extends CakeException
     /**
      * @inheritDoc
      */
-    protected $_messageTemplate = 'Filter class %s could not be found.';
+    protected string $_messageTemplate = 'Filter class %s could not be found.';
 }

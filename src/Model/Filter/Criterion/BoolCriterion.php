@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace CakeDC\SearchFilter\Model\Filter\Criterion;
 
 use Cake\Database\ExpressionInterface;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use CakeDC\SearchFilter\Filter\AbstractFilter;
 
 class BoolCriterion extends BaseCriterion
@@ -39,14 +39,14 @@ class BoolCriterion extends BaseCriterion
     /**
      * Finder method
      *
-     * @param \Cake\ORM\Query<\Cake\Datasource\EntityInterface> $query
+     * @param \Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface> $query
      * @param string|null $condition
      * @param array<string, mixed> $values
      * @param array<string, mixed> $criteria
      * @param array<string, mixed> $options
-     * @return \Cake\ORM\Query<\Cake\Datasource\EntityInterface>
+     * @return \Cake\ORM\Query\SelectQuery<\Cake\Datasource\EntityInterface>
      */
-    public function __invoke(Query $query, $condition, array $values, array $criteria, $options): Query
+    public function __invoke(SelectQuery $query, ?string $condition, array $values, array $criteria, array $options): SelectQuery
     {
         $filter = $this->buildFilter($condition, $values, $criteria, $options);
         if (!empty($filter)) {
@@ -59,7 +59,7 @@ class BoolCriterion extends BaseCriterion
     /**
      * @inheritDoc
      */
-    public function buildFilter(string $condition, array $values, array $criteria, array $options = []): array|callable|null
+    public function buildFilter(?string $condition, array $values, array $criteria, array $options = []): array|callable|null
     {
         $value = $this->getValues('value', AbstractFilter::COND_EQ, $values);
 
