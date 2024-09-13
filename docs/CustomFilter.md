@@ -30,10 +30,7 @@ use CakeDC\SearchFilter\Filter\AbstractFilter;
 
 class RangeCriterion extends BaseCriterion
 {
-
-    protected $field;
-
-    public function __construct($field)
+    public function __construct(string|ExpressionInterface $field)
     {
         $this->field = $field;
     }
@@ -48,7 +45,7 @@ class RangeCriterion extends BaseCriterion
         return $query;
     }
 
-    public function buildFilter(string $condition, array $values, array $criteria, array $options = []): ?callable
+    public function buildFilter(string $condition, array $values, array $criteria, array $options = []): array|callable|null
     {
         return function (QueryExpression $exp) use ($values) {
             if (!empty($values['from']) && !empty($values['to'])) {
@@ -58,13 +55,12 @@ class RangeCriterion extends BaseCriterion
         };
     }
 
-    public function isApplicable($value, string $condition): bool
+    public function isApplicable(mixed $value, string $condition): bool
     {
         return !empty($value['from']) || !empty($value['to']);
     }
 }
 ```
-
 
 ## Registering and Using Custom Filters
 
