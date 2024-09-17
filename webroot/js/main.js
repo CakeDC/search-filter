@@ -710,7 +710,8 @@ const SearchLookupInput = {
             suggestions: [],
             showSuggestions: false,
             debounceTimeout: null,
-            arrowCounter: -1
+            arrowCounter: -1,
+            isLoading: false
         };
     },
     computed: {
@@ -740,6 +741,7 @@ const SearchLookupInput = {
         async fetchSuggestions() {
             if (this.inputValue.length >= 2) {
                 try {
+                    this.isLoading = true;
                     let query = this.query.replace(this.wildcard, this.inputValue)
                     let autocompleteUrl = this.autocompleteUrl + '?' + query;
                     if (!/^https?:\/\//i.test(autocompleteUrl)) {
@@ -752,8 +754,11 @@ const SearchLookupInput = {
                     this.arrowCounter = -1;
                 } catch (error) {
                     console.error('Error fetching suggestions:', error);
+                } finally {
+                    this.isLoading = false;
                 }
             } else {
+                this.isLoading = false;
                 this.suggestions = [];
                 this.showSuggestions = false;
             }
