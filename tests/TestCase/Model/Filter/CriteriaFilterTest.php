@@ -108,7 +108,6 @@ class CriteriaFilterTest extends TestCase
     public function testApplyWithInCriterionAndInnerStringCriterion(): void
     {
         $this->Authors = TableRegistry::getTableLocator()->get('Authors');
-        $this->Articles->belongsTo('Authors');
 
         $criteria = [
             'author_id' => new InCriterion('Articles.author_id', $this->Authors, new StringCriterion('name')),

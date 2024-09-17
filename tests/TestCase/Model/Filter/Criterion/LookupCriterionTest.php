@@ -51,7 +51,6 @@ class LookupCriterionTest extends TestCase
         parent::setUp();
         $this->Articles = TableRegistry::getTableLocator()->get('Articles');
         $this->Authors = TableRegistry::getTableLocator()->get('Authors');
-        $this->Articles->belongsTo('Authors');
 
         $innerCriterion = new StringCriterion('name');
         $this->lookupCriterion = new LookupCriterion('Articles.author_id', $this->Authors, $innerCriterion);
