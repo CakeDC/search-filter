@@ -11,6 +11,8 @@ window._search.fields = <?= json_encode($viewFields) ?>;
 var values = null;
 <?php if (!empty($values)): ?>
     window._search.values = <?= json_encode($values) ?>;
+<?php else: ?>
+    window._search.values = {};
 <?php endif; ?>
 </script>
 
