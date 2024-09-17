@@ -157,7 +157,7 @@ class LookupFilterTest extends TestCase
         $result = $this->lookupFilter->toArray();
 
         $this->assertArrayHasKey('autocompleteUrl', $result);
-        $this->assertEquals('http://localhost/authors/autocomplete', $result['autocompleteUrl']);
+        $this->assertEquals('/authors/autocomplete', $result['autocompleteUrl']);
         $this->assertIsArray($result);
         $this->assertArrayHasKey('type', $result);
         $this->assertEquals('autocomplete', $result['type']);
