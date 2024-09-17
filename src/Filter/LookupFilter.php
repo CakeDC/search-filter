@@ -115,7 +115,7 @@ class LookupFilter extends AbstractFilter
     public function toArray(): array
     {
         if (empty($this->properties['autocompleteUrl'])) {
-            $this->properties['autocompleteUrl'] = Router::url($this->getAutocompleteRoute(), true);
+            $this->properties['autocompleteUrl'] = Router::url($this->getAutocompleteRoute());
         }
         $props = parent::toArray();
 

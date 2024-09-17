@@ -238,12 +238,14 @@ const SearchApp = {
     },
     mounted() {
         console.info("Search mounted!");
-        const keys = Object.keys(this.values);
-        for (let filter of keys) {
-            this.add({filter: filter, ...this.values[filter]});
-        }
-        if (keys.length == 0) {
-            this.add();
+        if (this.values != null && this.values != undefined) {
+            const keys = Object.keys(this.values);
+            for (let filter of keys) {
+                this.add({filter: filter, ...this.values[filter]});
+            }
+            if (keys.length == 0) {
+                this.add();
+            }
         }
         const appRoot = document.getElementById(window._search.rootElemId);
         appRoot.addEventListener(
@@ -708,6 +710,7 @@ const SearchLookupInput = {
             suggestions: [],
             showSuggestions: false,
             debounceTimeout: null,
+            arrowCounter: -1
         };
     },
     computed: {
@@ -732,52 +735,96 @@ const SearchLookupInput = {
             clearTimeout(this.debounceTimeout);
             this.debounceTimeout = setTimeout(() => {
                 this.fetchSuggestions();
-            }, 300);
+            }, 200);
         },
         async fetchSuggestions() {
-            if (this.inputValue.length < 2) {
+            if (this.inputValue.length >= 2) {
+                try {
+                    let query = this.query.replace(this.wildcard, this.inputValue)
+                    let autocompleteUrl = this.autocompleteUrl + '?' + query;
+                    if (!/^https?:\/\//i.test(autocompleteUrl)) {
+                        autocompleteUrl = `${window.location.origin}${autocompleteUrl}`;
+                    }
+                    const url = new URL(autocompleteUrl);
+                    const response = await fetch(url);
+                    this.suggestions = await response.json();
+                    this.showSuggestions = true;
+                    this.arrowCounter = -1;
+                } catch (error) {
+                    console.error('Error fetching suggestions:', error);
+                }
+            } else {
                 this.suggestions = [];
                 this.showSuggestions = false;
-                return;
-            }
-
-            let query = this.query.replace(this.wildcard, this.inputValue)
-            let autocompleteUrl = this.autocompleteUrl + '?' + query;
-            const url = new URL(autocompleteUrl);
-
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                this.suggestions = data;
-                this.showSuggestions = true;
-            } catch (error) {
-                console.error('Error fetching suggestions:', error);
             }
         },
         selectSuggestion(suggestion) {
             this.inputValue = suggestion[this.valueName];
             this.selectedId = suggestion[this.idName];
             this.showSuggestions = false;
-            this.$emit('change-value', {
-                index: this.index,
-                value: { id: this.selectedId, value: this.inputValue }
-            });
+            this.$emit('change-value', { index: this.index, value: { id: this.selectedId, value: this.inputValue } });
+        },
+        onArrowDown(evt) {
+            if (this.showSuggestions) {
+                if (this.arrowCounter < this.suggestions.length - 1) {
+                    this.arrowCounter++;
+                }
+                this.scrollToActive();
+                evt.preventDefault();
+            }
+        },
+        onArrowUp(evt) {
+            if (this.showSuggestions) {
+                if (this.arrowCounter > 0) {
+                    this.arrowCounter--;
+                }
+                this.scrollToActive();
+                evt.preventDefault();
+            }
+        },
+        onEnter(event) {
+            if (this.showSuggestions && this.arrowCounter > -1 && this.arrowCounter < this.suggestions.length) {
+                event.preventDefault();
+                this.selectSuggestion(this.suggestions[this.arrowCounter]);
+            }
+        },
+        onEscape() {
+            if (this.showSuggestions) {
+                this.showSuggestions = false;
+                this.arrowCounter = -1;
+                this.$el.querySelector('input[type="text"]').focus();
+            }
+        },
+        scrollToActive() {
+            const activeItem = this.$el.querySelector('.is-active');
+            if (activeItem) {
+                activeItem.scrollIntoView({ block: 'nearest' });
+            }
         },
         onBlur() {
             setTimeout(() => {
                 this.showSuggestions = false;
+                this.arrowCounter = -1;
             }, 200);
-        },
+        }
     },
     mounted() {
         if (this.value) {
-            this.inputValue = this.value.value;
-            this.selectedId = this.value.id;
+            this.inputValue = this.value.value || '';
+            this.selectedId = this.value.id || '';
         }
     },
+    watch: {
+        value(newValue) {
+            if (newValue) {
+                this.inputValue = newValue.value || '';
+                this.selectedId = newValue.id || '';
+            } else {
+                this.inputValue = '';
+                this.selectedId = '';
+            }
+        }
+    }
 };
 
 const createMyApp = (root, callback) => {

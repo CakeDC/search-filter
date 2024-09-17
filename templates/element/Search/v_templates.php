@@ -336,7 +336,7 @@
     display: block;
     padding: 0.3125rem 0;
     margin: 0.125rem 0 0;
-    font-size: 1rem;
+    font-size: 14px;
     text-align: left;
     list-style: none;
     background-color: var(--search-color-white);
@@ -349,7 +349,7 @@
 }
 
 .suggestions-list li {
-    padding: 0.1875rem 1.25rem;
+    padding: 0.2rem 1.25rem;
     clear: both;
     font-weight: 400;
     line-height: 1.5;
@@ -362,6 +362,10 @@
     color: var(--search-color-gray-800);
     text-decoration: none;
     background-color: var(--search-color-gray-100);
+}
+
+.suggestions-list .is-active {
+  background-color: var(--search-color-gray-200);
 }
 </style>
 
@@ -711,12 +715,7 @@
 </script>
 
 <script type="text/x-template" id="search-input-lookup-template">
-  <span class="lookup-wrapper">
-    <input
-      type="hidden"
-      :name="'v[' + index + '][id][]'"
-      v-model="selectedId"
-    />
+  <div class="lookup-wrapper">
     <input
       type="text"
       class="form-control value typeahead"
@@ -724,16 +723,28 @@
       v-model="inputValue"
       autocomplete="off"
       @input="onInput"
+      @keydown.down="onArrowDown"
+      @keydown.up="onArrowUp"
+      @keydown.enter="onEnter"
+      @keydown.esc="onEscape"
       @blur="onBlur"
     />
-    <ul v-if="showSuggestions" class="suggestions-list">
+    <ul v-if="showSuggestions" class="suggestions-list" role="listbox">
       <li
-        v-for="suggestion in suggestions"
-        :key="suggestion.id"
+        v-for="(suggestion, index) in suggestions"
+        :key="suggestion[idName]"
         @click="selectSuggestion(suggestion)"
+        @mouseenter="arrowCounter = index"
+        :class="{ 'is-active': index === arrowCounter }"
+        role="option"
       >
         {{ suggestion[valueName] }}
       </li>
     </ul>
-  </span>
+    <input
+      type="hidden"
+      :name="'v[' + index + '][id][]'"
+      v-model="selectedId"
+    />
+  </div>
 </script>
