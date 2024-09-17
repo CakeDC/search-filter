@@ -33,8 +33,6 @@ class Application extends BaseApplication
         parent::bootstrap();
 
         $this->addPlugin('CakeDC/SearchFilter', [
-            // 'path' => ROOT . DS,
-            // 'autoload' => true,
         ]);
     }
 

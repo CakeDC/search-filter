@@ -31,7 +31,6 @@ chdir($root);
 
 require $root . '/vendor/cakephp/cakephp/src/functions.php';
 require_once $root . '/vendor/autoload.php';
-// require_once $root . '/vendor/cakephp/cakephp/tests/bootstrap.php';
 
 define('ROOT', $root . DS . 'tests' . DS . 'test_app' . DS);
 define('APP', ROOT . 'App' . DS);
@@ -52,7 +51,6 @@ Configure::write('App', [
     'encoding' => 'UTF-8',
     'debug' => true,
     'paths' => [
-        // 'plugins' => [ROOT . 'Plugin' . DS],
         'templates' => [ROOT . 'templates' . DS],
     ],
 ]);
@@ -89,7 +87,6 @@ Configure::write('Session', [
     'defaults' => 'php',
 ]);
 
-// Ensure default test connection is defined
 if (!getenv('db_dsn')) {
     putenv('db_dsn=sqlite:///:memory:');
 }
@@ -99,16 +96,11 @@ ConnectionManager::setConfig('test', [
     'timezone' => 'UTC',
 ]);
 
-// Load routes
-// require CONFIG . 'routes.php';
-
-// Load schema
 if (env('FIXTURE_SCHEMA_METADATA')) {
     $loader = new SchemaLoader();
     $loader->loadInternalFile(env('FIXTURE_SCHEMA_METADATA'));
 }
 
-// Ensure The Plugins are loaded
 Configure::write('Plugin.CakeDC/SearchFilter', [
     'path' => dirname(dirname(__FILE__)) . DS,
 ]);
