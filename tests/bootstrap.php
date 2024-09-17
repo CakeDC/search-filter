@@ -91,7 +91,6 @@ Plugin::getCollection()->add(new \CakeDC\SearchFilter\Plugin([
 
 Configure::write('App.encoding', 'utf8');
 
-// Ensure default test connection is defined
 if (!getenv('db_dsn')) {
     putenv('db_dsn=sqlite:///:memory:');
 }
@@ -101,7 +100,6 @@ ConnectionManager::setConfig('test', [
     'timezone' => 'UTC',
 ]);
 
-// Create test database schema
 if (env('FIXTURE_SCHEMA_METADATA')) {
     $loader = new SchemaLoader();
     $loader->loadInternalFile(env('FIXTURE_SCHEMA_METADATA'));

@@ -46,7 +46,6 @@ class ArticlesControllerTest extends TestCase
     public function testAuthorEqual(): void
     {
         $this->get('/articles?f[0]=author_id&c[0]=%3D&v[0][id][]=1');
-        // debug($this->_getBodyAsString());
         $this->assertResponseOk();
         $this->assertResponseContains('First Article');
         $this->assertResponseNotContains('Second Article');
