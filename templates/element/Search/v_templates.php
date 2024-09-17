@@ -367,6 +367,30 @@
 .suggestions-list .is-active {
   background-color: var(--search-color-gray-200);
 }
+.lookup-wrapper {
+    position: relative;
+}
+.input-wrapper {
+    position: relative;
+}
+.loading-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.loading-spinner {
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #3498db;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 </style>
 
 <script type="text/x-template" id="search-list">
@@ -715,36 +739,41 @@
 </script>
 
 <script type="text/x-template" id="search-input-lookup-template">
-  <div class="lookup-wrapper">
-    <input
-      type="text"
-      class="form-control value typeahead"
-      :name="'v[' + index + '][value][]'"
-      v-model="inputValue"
-      autocomplete="off"
-      @input="onInput"
-      @keydown.down="onArrowDown"
-      @keydown.up="onArrowUp"
-      @keydown.enter="onEnter"
-      @keydown.esc="onEscape"
-      @blur="onBlur"
-    />
-    <ul v-if="showSuggestions" class="suggestions-list" role="listbox">
-      <li
-        v-for="(suggestion, index) in suggestions"
-        :key="suggestion[idName]"
-        @click="selectSuggestion(suggestion)"
-        @mouseenter="arrowCounter = index"
-        :class="{ 'is-active': index === arrowCounter }"
-        role="option"
-      >
-        {{ suggestion[valueName] }}
-      </li>
-    </ul>
-    <input
-      type="hidden"
-      :name="'v[' + index + '][id][]'"
-      v-model="selectedId"
-    />
-  </div>
+	<div class="lookup-wrapper">
+		<div class="input-wrapper">
+			<input
+				type="text"
+				class="form-control value typeahead"
+				:name="'v[' + index + '][value][]'"
+				v-model="inputValue"
+				autocomplete="off"
+				@input="onInput"
+				@keydown.down="onArrowDown"
+				@keydown.up="onArrowUp"
+				@keydown.enter="onEnter"
+				@keydown.esc="onEscape"
+				@blur="onBlur"
+			/>
+			<div v-if="isLoading" class="loading-icon">
+				<i class="fa fa-spinner fa-spin"></i>
+			</div>
+		</div>
+		<ul v-if="showSuggestions" class="suggestions-list" role="listbox">
+			<li
+				v-for="(suggestion, index) in suggestions"
+				:key="suggestion[idName]"
+				@click="selectSuggestion(suggestion)"
+				@mouseenter="arrowCounter = index"
+				:class="{ 'is-active': index === arrowCounter }"
+				role="option"
+			>
+				{{ suggestion[valueName] }}
+			</li>
+		</ul>
+		<input
+			type="hidden"
+			:name="'v[' + index + '][id][]'"
+			v-model="selectedId"
+		/>
+	</div>
 </script>
