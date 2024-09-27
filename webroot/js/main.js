@@ -74,7 +74,7 @@ const inputTypeMap = {
     },
     'select': function (type, condition) {
         if (isMultiple(condition)) {
-            return 'SearchMultiple';
+            return 'SearchSelectMultiple';
         }
         return 'SearchSelect';
     },
@@ -107,59 +107,6 @@ function getInputType(type, condition) {
     return defaultComponent;
 }
 
-function getInputType1(type, condition) {
-    let componentName = 'SearchInput';
-    if (condition == 'in' && type == 'multiple') {
-        componentName = 'SearchSelectMultiple';
-    } else if (condition == 'in') {
-        componentName = 'SearchMultiple';
-    } else if (condition == 'none') {
-        componentName = 'SearchNone';
-    } else if (type == 'autocomplete' && condition == 'like') {
-        componentName = 'SearchInput';
-    } else if (type == 'autocomplete') {
-        componentName = 'SearchLookupInput';
-    } else if (type == 'numeric' && condition == 'between') {
-        componentName = 'SearchInputNumericRange';
-    } else if (type == 'datetime') {
-        switch (condition) {
-            case 'last_week':
-            case 'this_week':
-            case 'yesterday':
-            case 'today':
-                componentName = 'SearchInputDateTimeFixed';
-                break;
-            case 'between':
-                componentName = 'SearchInputDateTimeRange';
-                break;
-            default:
-                componentName = 'SearchInputDateTime';
-        }
-    } else if (type == 'date') {
-        switch (condition) {
-            case 'last_week':
-            case 'this_week':
-            case 'yesterday':
-            case 'today':
-                componentName = 'SearchInputDateFixed';
-                break;
-            case 'between':
-                componentName = 'SearchInputDateRange';
-                break;
-            default:
-                componentName = 'SearchInputDate';
-        }
-    } else if (type == 'select') {
-        componentName = 'SearchSelect';
-    } else if (type == 'multiple') {
-        componentName = 'SearchSelectMultiple';
-    } else {
-        componentName = 'SearchInput';
-    }
-
-    return componentName;
-};
-
 const SearchApp = {
     template: "#search-list",
     rootElemId: 'ext-search',
@@ -168,6 +115,8 @@ const SearchApp = {
             filters: [],
             components: [],
             appKey: uuid(),
+            shouldTeleport: false,
+            teleportTarget: null,
         };
     },
     methods: {
@@ -234,10 +183,20 @@ const SearchApp = {
             let idx = this.components.findIndex(el => el.index == evt.index);
             this.components[idx] = {...this.components[idx], value: evt.value};
         },
-
+        setTeleportStatus() {
+            const headerId = window._search.searchHeaderId;
+            if (headerId && document.getElementById(headerId)) {
+                this.shouldTeleport = true;
+                this.teleportTarget = `#${headerId}`;
+            } else {
+                this.shouldTeleport = false;
+                this.teleportTarget = null;
+            }
+        },
     },
     mounted() {
         console.info("Search mounted!");
+        this.setTeleportStatus();
         if (this.values != null && this.values != undefined) {
             const keys = Object.keys(this.values);
             for (let filter of keys) {
@@ -860,3 +819,4 @@ const createMyApp = (root, callback) => {
 };
 window._search.rootElemId = SearchApp.rootElemId;
 window._search.createMyApp = createMyApp;
+

@@ -15,6 +15,7 @@ var values = null;
     window._search.values = {};
 <?php endif; ?>
 </script>
+<?= $this->Html->css('CakeDC/SearchFilter.default'); ?>
 
 <script src="/search_filter/js/vue3.js"></script>
 <script src="/search_filter/js/main.js" type="module"></script>
