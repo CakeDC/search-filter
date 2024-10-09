@@ -28,6 +28,7 @@
         "test": "phpunit --stderr",
         "coverage-test": "phpunit --stderr --coverage-clover=clover.xml",
         "stan": "phpstan.phar analyse --memory-limit=-1 src/",
+        "stan-local": "php vendor/bin/phpstan.phar analyse --memory-limit=-1 src/",
         "stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan:^1.9.0 psalm/phar:^5.1.0 && mv composer.backup composer.json",
         "psalm": "psalm.phar --show-info=false",
         "stan-rebuild-baseline": "phpstan.phar analyse ./src/ --generate-baseline",

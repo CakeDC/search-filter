@@ -35,6 +35,13 @@ class DateCriterion extends BaseCriterion
     protected FunctionsBuilder $func;
 
     /**
+     * Database type
+     *
+     * @var string
+     */
+    protected string $dbType = 'date';
+
+    /**
      * DateCriterion constructor.
      *
      * @param string|\Cake\Database\ExpressionInterface $field
@@ -98,6 +105,10 @@ class DateCriterion extends BaseCriterion
      */
     public function buildCondition(string|ExpressionInterface $fieldName, string $condition, array $values, array $options = []): ?callable
     {
+        if ($this->dbType === 'date') {
+            $fieldName = $this->ensureFieldIsDate($fieldName);
+        }
+
         if ($condition == AbstractFilter::COND_BETWEEN) {
             $from = $this->getValues('date_from', $condition, $values);
             $to = $this->getValues('date_to', $condition, $values);
@@ -107,15 +118,15 @@ class DateCriterion extends BaseCriterion
 
             if (!empty($from) && !empty($to)) {
                 return function (QueryExpression $exp) use ($fieldName, $from, $to): QueryExpression {
-                    return $exp->between($fieldName, $from, $to, 'datetime');
+                    return $exp->between($fieldName, $from, $to, $this->dbType);
                 };
             } elseif (!empty($from)) {
                 return function (QueryExpression $exp) use ($fieldName, $from): QueryExpression {
-                    return $exp->gte($fieldName, $from, 'datetime');
+                    return $exp->gte($fieldName, $from, $this->dbType);
                 };
             } elseif (!empty($to)) {
                 return function (QueryExpression $exp) use ($fieldName, $to): QueryExpression {
-                    return $exp->lte($fieldName, $to, 'datetime');
+                    return $exp->lte($fieldName, $to, $this->dbType);
                 };
             }
 
@@ -150,7 +161,7 @@ class DateCriterion extends BaseCriterion
             $value = $this->prepareTime($value);
         }
 
-        return $this->buildQueryByCondition($fieldName, $condition, $value);
+        return $this->buildQueryByCondition($fieldName, $condition, $value, ['type' => $this->dbType]);
     }
 
     /**
@@ -186,5 +197,20 @@ class DateCriterion extends BaseCriterion
     protected function prepareTime(string $dateStr): DateTime|Date
     {
         return Date::createFromFormat($this->format, $dateStr);
+    }
+
+    /**
+     * Ensure the field is converted to a date if it's a datetime
+     *
+     * @param string|\Cake\Database\ExpressionInterface $field
+     * @return \Cake\Database\ExpressionInterface
+     */
+    protected function ensureFieldIsDate(string|ExpressionInterface $field): ExpressionInterface
+    {
+        if (is_string($field)) {
+            $field = new IdentifierExpression($field);
+        }
+
+        return new FunctionExpression('DATE', [$field], [], 'date');
     }
 }

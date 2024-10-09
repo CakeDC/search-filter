@@ -182,6 +182,14 @@ use CakeDC\SearchFilter\Model\Filter\Criterion\InCriterion;
 use CakeDC\SearchFilter\Model\Filter\Criterion\StringCriterion;
 
 $selectFilter = (new SelectFilter())
+	->setCriterion($manager->criterion()->numeric('status_id'))
+    ->setLabel('Status')
+    ->setOptions($this->Statuses->find('list')->toArray())
+    ->setEmpty('All Statuses');	
+
+// or 
+
+$selectFilter = (new SelectFilter())
     ->setCriterion(new InCriterion('status', $statusesTable, new StringCriterion('name')))
     ->setLabel('Status')
     ->setOptions(['active' => 'Active', 'inactive' => 'Inactive'])

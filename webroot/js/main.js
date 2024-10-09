@@ -252,7 +252,7 @@ const SearchItem = {
     props: ['fields', 'index', 'filter', 'condition', 'value', 'highlight'],
     data() {
         return {
-            search_filter: this.filter,
+            search_filter: this.filter || '',
             itemClasses: ['search-filter-item'],
         };
     },
@@ -270,9 +270,9 @@ const SearchItem = {
             return this.search_filter != '';
         },
         currentField() {
-            let field = this.fields[this.search_filter];
-            let localField = {index: this.index};
-            return {...field, ...localField, condition: this.condition, value: this.value, field: field};
+            let field = this.fields && this.search_filter ? this.fields[this.search_filter] : null;
+            let localField = {index: this.index, condition: this.condition, value: this.value, field: field};
+            return field ? {...field, ...localField} : localField;
         },
         closeItem(index) {
             this.$emit('close-item', this.index)
@@ -528,24 +528,124 @@ const SearchInputNumericRange = {
     },
 };
 
-const SearchSelect = {
-    template: "#search-input-select-template",
-    props: ['index', 'value', 'field'],
+const Select2 = {
+    template: "#search-select2-template",
+    props: {
+        modelValue: [String, Array],
+        id: {
+            type: String,
+            default: ''
+        },
+        name: {
+            type: String,
+            default: ''
+        },
+        placeholder: {
+            type: String,
+            default: ''
+        },
+        options: {
+            type: Array,
+            default: () => []
+        },
+        disabled: {
+            type: Boolean,
+            default: false
+        },
+        required: {
+            type: Boolean,
+            default: false
+        },
+        settings: {
+            type: Object,
+            default: () => ({})
+        },
+    },
     data() {
-        let value = '';
-        if (this.value != null && this.value != undefined) {
-            value = this.value.value;
-        }
         return {
-            currentValue: value,
-            options: this.field.options || {},
-            empty: this.field.empty || '[Select]',
+            select2: null
         };
     },
     methods: {
-        setValue(event) {
-            this.$emit('change-value', {index: this.index, value: {value: this.currentValue}});
+        setOption(val = []) {
+            this.select2.empty();
+            this.select2.select2({
+                placeholder: this.placeholder,
+                ...this.settings,
+                data: val
+            });
+            this.setValue(this.modelValue);
         },
+        setValue(val) {
+            if (Array.isArray(val)) {
+                this.select2.val([...val]);
+            } else {
+                this.select2.val([val]);
+            }
+            this.select2.trigger('change');
+        }
+    },
+    mounted() {
+        this.select2 = $(this.$el)
+            .find('select')
+            .select2({
+                placeholder: this.placeholder,
+                ...this.settings,
+                data: this.options
+            })
+            .on('select2:select select2:unselect', ev => {
+                this.$emit('update:modelValue', this.select2.val());
+                this.$emit('select', ev['params']['data']);
+            });
+        this.setValue(this.modelValue);
+    },
+    beforeUnmount() {
+        this.select2.select2('destroy');
+    },
+    watch: {
+        options: {
+            handler(val) {
+                this.setOption(val);
+            },
+            deep: true
+        },
+        modelValue: {
+            handler(val) {
+                this.setValue(val);
+            },
+            deep: true
+        },
+    },
+};
+
+const SearchSelect = {
+    template: "#search-input-select-template",
+    props: ['index', 'value', 'field'],
+    components: {
+        Select2
+    },
+    data() {
+        return {
+            currentValue: this.value?.value || '',
+            options: this.formatOptions(this.field.options || {}),
+            empty: this.field.empty || '[Select]',
+            mode: this.getMode(),
+        };
+    },
+    methods: {
+        setValue(newValue) {
+            this.$emit('change-value', {index: this.index, value: {value: newValue}});
+        },
+        getMode() {
+            return this.field.mode == 'select2' ? 'select2' : 'native'
+        },
+        formatOptions(options) {
+            if (this.getMode() === 'select2') {
+                return Object.entries(options).map(([id, text]) => ({id, text}));
+            } else {
+                return options;
+            }
+        }
     },
 };
 
@@ -805,6 +905,7 @@ const createMyApp = (root, callback) => {
     app.component('SearchInputDateTimeRange', SearchInputDateTimeRange);
     app.component('SearchInputNumericRange', SearchInputNumericRange);
     app.component('SearchNone', SearchNone);
+    app.component('Select2', Select2);
     app.component('SearchSelect', SearchSelect);
     app.component('SearchSelectMultiple', SearchSelectMultiple);
     app.component('SearchMultiple', SearchMultiple);

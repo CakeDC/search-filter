@@ -90,7 +90,7 @@ class DateCriterionTest extends TestCase
         $valueBinder = new ValueBinder();
         $sql = $modifiedExpression->sql($valueBinder);
 
-        $this->assertStringContainsString('test_date =', $sql);
+        $this->assertStringContainsString('(DATE(test_date)) =', $sql);
         $this->assertStringContainsString(':c0', $sql);
 
         $bindings = $valueBinder->bindings();
@@ -122,7 +122,7 @@ class DateCriterionTest extends TestCase
         $valueBinder = new ValueBinder();
         $sql = $modifiedExpression->sql($valueBinder);
 
-        $this->assertStringContainsString('test_date !=', $sql);
+        $this->assertStringContainsString('(DATE(test_date)) !=', $sql);
         $this->assertStringContainsString(':c0', $sql);
 
         $bindings = $valueBinder->bindings();
@@ -154,7 +154,7 @@ class DateCriterionTest extends TestCase
         $valueBinder = new ValueBinder();
         $sql = $modifiedExpression->sql($valueBinder);
 
-        $this->assertStringContainsString('test_date >', $sql);
+        $this->assertStringContainsString('(DATE(test_date)) >', $sql);
         $this->assertStringContainsString(':c0', $sql);
 
         $bindings = $valueBinder->bindings();
@@ -186,7 +186,7 @@ class DateCriterionTest extends TestCase
         $valueBinder = new ValueBinder();
         $sql = $modifiedExpression->sql($valueBinder);
 
-        $this->assertStringContainsString('test_date >=', $sql);
+        $this->assertStringContainsString('(DATE(test_date)) >=', $sql);
         $this->assertStringContainsString(':c0', $sql);
 
         $bindings = $valueBinder->bindings();
@@ -218,7 +218,7 @@ class DateCriterionTest extends TestCase
         $valueBinder = new ValueBinder();
         $sql = $modifiedExpression->sql($valueBinder);
 
-        $this->assertStringContainsString('test_date <', $sql);
+        $this->assertStringContainsString('(DATE(test_date)) <', $sql);
         $this->assertStringContainsString(':c0', $sql);
 
         $bindings = $valueBinder->bindings();
@@ -250,7 +250,7 @@ class DateCriterionTest extends TestCase
         $valueBinder = new ValueBinder();
         $sql = $modifiedExpression->sql($valueBinder);
 
-        $this->assertStringContainsString('test_date <=', $sql);
+        $this->assertStringContainsString('(DATE(test_date)) <=', $sql);
         $this->assertStringContainsString(':c0', $sql);
 
         $bindings = $valueBinder->bindings();
@@ -282,7 +282,7 @@ class DateCriterionTest extends TestCase
         $valueBinder = new ValueBinder();
         $sql = $modifiedExpression->sql($valueBinder);
 
-        $this->assertStringContainsString('test_date BETWEEN', $sql);
+        $this->assertStringContainsString('DATE(test_date) BETWEEN', $sql);
         $this->assertStringContainsString(':c0 AND :c1', $sql);
 
         $bindings = $valueBinder->bindings();
@@ -316,7 +316,7 @@ class DateCriterionTest extends TestCase
         $valueBinder = new ValueBinder();
         $sql = $modifiedExpression->sql($valueBinder);
 
-        $this->assertStringContainsString('test_date = (CURRENT_DATE())', $sql);
+        $this->assertStringContainsString('DATE(test_date) = (CURRENT_DATE())', $sql);
     }
 
     /**
@@ -343,7 +343,7 @@ class DateCriterionTest extends TestCase
         $valueBinder = new ValueBinder();
         $sql = $modifiedExpression->sql($valueBinder);
 
-        $this->assertStringContainsString('test_date = (DATE_ADD(CURRENT_DATE, INTERVAL -1 DAY))', $sql);
+        $this->assertStringContainsString('DATE(test_date) = (DATE_ADD(CURRENT_DATE, INTERVAL -1 DAY))', $sql);
     }
 
     /**
@@ -370,7 +370,7 @@ class DateCriterionTest extends TestCase
         $valueBinder = new ValueBinder();
         $sql = $modifiedExpression->sql($valueBinder);
 
-        $this->assertStringContainsString('CONCAT(CAST(EXTRACT(YEAR FROM test_date) AS  varchar), CAST(EXTRACT(WEEK FROM test_date) AS  varchar)) = (CONCAT(CAST(EXTRACT(YEAR FROM CURRENT_DATE) AS  varchar), CAST(EXTRACT(WEEK FROM CURRENT_DATE) AS  varchar)))', $sql);
+        $this->assertStringContainsString('CONCAT(CAST(EXTRACT(YEAR FROM DATE(test_date)) AS  varchar), CAST(EXTRACT(WEEK FROM DATE(test_date)) AS  varchar)) = (CONCAT(CAST(EXTRACT(YEAR FROM CURRENT_DATE) AS  varchar), CAST(EXTRACT(WEEK FROM CURRENT_DATE) AS  varchar)))', $sql);
     }
 
     /**
@@ -397,6 +397,6 @@ class DateCriterionTest extends TestCase
         $valueBinder = new ValueBinder();
         $sql = $modifiedExpression->sql($valueBinder);
 
-        $this->assertStringContainsString('CONCAT(CAST(EXTRACT(YEAR FROM test_date) AS  varchar), CAST(EXTRACT(WEEK FROM test_date) AS  varchar)) = (CONCAT(CAST(EXTRACT(YEAR FROM DATE_ADD(CURRENT_DATE, INTERVAL -7 DAY)) AS  varchar), CAST(EXTRACT(WEEK FROM DATE_ADD(CURRENT_DATE, INTERVAL -7 DAY)) AS  varchar)))', $sql);
+        $this->assertStringContainsString('CONCAT(CAST(EXTRACT(YEAR FROM DATE(test_date)) AS  varchar), CAST(EXTRACT(WEEK FROM DATE(test_date)) AS  varchar)) = (CONCAT(CAST(EXTRACT(YEAR FROM DATE_ADD(CURRENT_DATE, INTERVAL -7 DAY)) AS  varchar), CAST(EXTRACT(WEEK FROM DATE_ADD(CURRENT_DATE, INTERVAL -7 DAY)) AS  varchar)))', $sql);
     }
 }
