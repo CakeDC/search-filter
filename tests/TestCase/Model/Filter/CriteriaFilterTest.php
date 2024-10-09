@@ -41,6 +41,11 @@ class CriteriaFilterTest extends TestCase
     protected $Articles;
 
     /**
+     * @var \Cake\ORM\Table
+     */
+    protected $Authors;
+
+    /**
      * setUp method
      *
      * @return void
