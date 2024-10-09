@@ -175,17 +175,39 @@
         />
     </span>
 </script>
+
+<script type="text/x-template" id="search-select2-template">
+  <div>
+    <select class="form-control" :id="id" :name="name" :disabled="disabled" :required="required"></select>
+  </div>
+</script>
+
 <script type="text/x-template" id="search-input-select-template">
     <span>
-        <select
-            class="form-control value"
-            :name="'v[' + index + '][value][]'"
-            v-model="currentValue"
-            @change="setValue()"
-        >
-            <option value="">{{ empty || '[Select]' }}</option>
-            <option v-for="(field, key) in options" :value="key">{{ field }}</option>
-        </select>
+        <template v-if="mode === 'select2'">
+            <Select2
+                :id="'select-' + index"
+                :name="'v[' + index + '][value][]'"
+                v-model="currentValue"
+                :options="options"
+                :placeholder="empty"
+                @update:modelValue="setValue"
+            />
+        </template>
+        <template v-else>
+            <select
+                class="form-control value"
+                :id="'select-' + index"
+                :name="'v[' + index + '][value][]'"
+                v-model="currentValue"
+                @change="setValue($event.target.value)"
+            >
+                <option value="">{{ empty }}</option>
+                <option v-for="(text, id) in options" :key="id" :value="id">
+                    {{ text }}
+                </option>
+            </select>
+        </template>
     </span>
 </script>
 
@@ -203,7 +225,6 @@
         </select>
     </span>
 </script>
-
 
 <script type="text/x-template" id="search-input-date-template">
     <span class="date-wrapper">

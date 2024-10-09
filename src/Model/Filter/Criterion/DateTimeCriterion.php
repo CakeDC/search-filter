@@ -14,6 +14,13 @@ use Cake\I18n\FrozenTime;
 class DateTimeCriterion extends DateCriterion
 {
     /**
+     * Database type
+     *
+     * @var string
+     */
+    protected string $dbType = 'datetime';
+
+    /**
      * DateCriterion constructor.
      *
      * @param string|\Cake\Database\ExpressionInterface $field

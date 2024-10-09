@@ -209,6 +209,7 @@ abstract class AbstractFilter implements FilterInterface
     public function excludeIn(): self
     {
         unset($this->conditions[AbstractFilter::COND_IN]);
+        unset($this->conditions[AbstractFilter::COND_NOT_IN]);
 
         return $this;
     }
