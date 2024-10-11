@@ -408,3 +408,28 @@
 .hidden {
     display: none !important;
 }
+
+.search-filter-item .select2-container {
+    width: auto !important;
+    min-width: 150px;
+}
+
+.search-filter-item .select2-selection {
+    width: 100%;
+}
+
+.select2-dropdown {
+    max-width: none !important;
+}
+
+.select2-results__options {
+    max-height: 150px;
+    overflow-y: auto;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.select2-results__option {
+    white-space: normal;
+    word-wrap: break-word;
+}

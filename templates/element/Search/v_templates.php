@@ -177,8 +177,8 @@
 </script>
 
 <script type="text/x-template" id="search-select2-template">
-  <div>
-    <select class="form-control" :id="id" :name="name" :disabled="disabled" :required="required"></select>
+  <div class="select2-wrapper">
+    <select class="form-control select2-control" :id="id" :name="name" :disabled="disabled" :required="required"></select>
   </div>
 </script>
 
