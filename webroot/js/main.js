@@ -203,7 +203,7 @@ const SearchApp = {
                 this.add({filter: filter, ...this.values[filter]});
             }
             if (keys.length == 0) {
-                this.add();
+                // this.add();
             }
         }
         const appRoot = document.getElementById(window._search.rootElemId);
@@ -241,7 +241,10 @@ const AddNewFilter = {
             return this.components.findIndex(el => el.filter == filter) >= 0;
         },
         selectFilter(event) {
-            this.$emit('add-filter', {filter: this.search_filter});
+            if (this.search_filter != null && this.search_filter != '') {
+                this.$emit('add-filter', {filter: this.search_filter});
+                this.search_filter = '';
+            }
         },
     },
 
