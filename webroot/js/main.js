@@ -895,32 +895,45 @@ const SearchLookupInput = {
 };
 
 const createMyApp = (root, callback) => {
-    const app = Vue.createApp(SearchApp);
-    app.component('AddNewFilter', AddNewFilter);
-    app.component('SearchItem', SearchItem);
-    app.component('SearchCondition', SearchCondition);
-    app.component('SearchInput', SearchInput);
-    app.component('SearchInputDate', SearchInputDate);
-    app.component('SearchInputDateFixed', SearchInputDateFixed);
-    app.component('SearchInputDateRange', SearchInputDateRange);
-    app.component('SearchInputDateTime', SearchInputDateTime);
-    app.component('SearchInputDateTimeFixed', SearchInputDateTimeFixed);
-    app.component('SearchInputDateTimeRange', SearchInputDateTimeRange);
-    app.component('SearchInputNumericRange', SearchInputNumericRange);
-    app.component('SearchNone', SearchNone);
-    app.component('Select2', Select2);
-    app.component('SearchSelect', SearchSelect);
-    app.component('SearchSelectMultiple', SearchSelectMultiple);
-    app.component('SearchMultiple', SearchMultiple);
-    app.component('SearchMultipleItem', SearchMultipleItem);
-    app.component('SearchLookupInput', SearchLookupInput);
-    if (callback != undefined) {
-        callback(app, registerConditions);
+    if (window._search.app) {
+        window._search.app.unmount();
+        delete window._search.app;
     }
-    window._search.rootElemId = root;
-    app.mount('#' + root);
-    window._search.app = app;
+
+    setTimeout(() => {
+        const app = Vue.createApp(SearchApp);
+        app.component('AddNewFilter', AddNewFilter);
+        app.component('SearchItem', SearchItem);
+        app.component('SearchCondition', SearchCondition);
+        app.component('SearchInput', SearchInput);
+        app.component('SearchInputDate', SearchInputDate);
+        app.component('SearchInputDateFixed', SearchInputDateFixed);
+        app.component('SearchInputDateRange', SearchInputDateRange);
+        app.component('SearchInputDateTime', SearchInputDateTime);
+        app.component('SearchInputDateTimeFixed', SearchInputDateTimeFixed);
+        app.component('SearchInputDateTimeRange', SearchInputDateTimeRange);
+        app.component('SearchInputNumericRange', SearchInputNumericRange);
+        app.component('SearchNone', SearchNone);
+        app.component('Select2', Select2);
+        app.component('SearchSelect', SearchSelect);
+        app.component('SearchSelectMultiple', SearchSelectMultiple);
+        app.component('SearchMultiple', SearchMultiple);
+        app.component('SearchMultipleItem', SearchMultipleItem);
+        app.component('SearchLookupInput', SearchLookupInput);
+
+        if (callback != undefined) {
+            callback(app, registerConditions);
+        }
+
+        window._search.rootElemId = root;
+        const mountElement = document.getElementById(root);
+        if (mountElement) {
+            app.mount('#' + root);
+            window._search.app = app;
+        } else {
+            console.warn(`Mount element #${root} not found`);
+        }
+    }, 0);
 };
 window._search.rootElemId = SearchApp.rootElemId;
 window._search.createMyApp = createMyApp;
-
