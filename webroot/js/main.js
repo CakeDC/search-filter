@@ -935,5 +935,6 @@ const createMyApp = (root, callback) => {
         }
     }, 0);
 };
+window._search = window._search || {};
 window._search.rootElemId = SearchApp.rootElemId;
 window._search.createMyApp = createMyApp;
