@@ -273,7 +273,7 @@ const SearchItem = {
             return this.search_filter != '';
         },
         currentField() {
-            let field = this.fields && this.search_filter ? this.fields[this.search_filter] : null;
+            let field = this.fields && this.search_filter && this.fields.hasOwnProperty(this.search_filter) ? this.fields[this.search_filter] : null;
             let localField = {index: this.index, condition: this.condition, value: this.value, field: field};
             return field ? {...field, ...localField} : localField;
         },
@@ -656,21 +656,38 @@ const SearchSelectMultiple = {
     template: "#search-input-multiple-template",
     props: ['index', 'value', 'field'],
     data() {
-        let value = '';
-        if (this.value != null && this.value != undefined) {
-            value = this.value.value;
+        let currentValue = [];
+        if (this.value && Array.isArray(this.value) && this.value.length > 0) {
+            currentValue = this.value.map(item => item.value);
         }
+
         return {
-            currentValue: value,
+            currentValue: currentValue,
             options: this.field.options || {},
             empty: this.field.empty || '[Select]',
         };
     },
     methods: {
         setValue(event) {
-            this.$emit('change-value', {index: this.index, value: {value: this.currentValue}});
+            const valueObjects = this.currentValue.map(value => ({ value }));
+            this.$emit('change-value', {
+                index: this.index,
+                value: { value: valueObjects }
+            });
         },
     },
+    watch: {
+        value: {
+            handler(newValue) {
+                if (newValue?.value) {
+                    this.currentValue = newValue.value.map(item => item.value);
+                } else {
+                    this.currentValue = [];
+                }
+            },
+            deep: true
+        }
+    }
 };
 
 const SearchMultiple = {
