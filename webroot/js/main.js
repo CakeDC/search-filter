@@ -117,6 +117,7 @@ const SearchApp = {
             appKey: uuid(),
             shouldTeleport: false,
             teleportTarget: null,
+            onClearCallback: null
         };
     },
     methods: {
@@ -155,7 +156,10 @@ const SearchApp = {
         },
 
         removeAll: function() {
-            this.components = []
+            this.components = [];
+            if (this.onClearCallback && typeof this.onClearCallback === 'function') {
+                this.onClearCallback();
+            }
         },
         removeItem(index) {
             let idx = this.components.findIndex(el => el.index == index);
@@ -193,6 +197,9 @@ const SearchApp = {
                 this.teleportTarget = null;
             }
         },
+        registerClearCallback(callback) {
+            this.onClearCallback = callback;
+        }
     },
     mounted() {
         console.info("Search mounted!");
@@ -911,7 +918,7 @@ const SearchLookupInput = {
     }
 };
 
-const createMyApp = (root, callback) => {
+const createMyApp = (root, callback, clearCallback) => {
     if (window._search.app) {
         window._search.app.unmount();
         delete window._search.app;
@@ -945,7 +952,10 @@ const createMyApp = (root, callback) => {
         window._search.rootElemId = root;
         const mountElement = document.getElementById(root);
         if (mountElement) {
-            app.mount('#' + root);
+            const instance = app.mount('#' + root);
+            if (clearCallback) {
+                instance.registerClearCallback(clearCallback);
+            }
             window._search.app = app;
         } else {
             console.warn(`Mount element #${root} not found`);
