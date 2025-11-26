@@ -40,7 +40,7 @@ composer require cakedc/search-filter
 Then, add the following line to your application's `src/Application.php` file:
 
 ```php
-$this->addPlugin('CakeDC.SearchFilter');
+$this->addPlugin('CakeDC/SearchFilter');
 ```
 
 ## Configuration

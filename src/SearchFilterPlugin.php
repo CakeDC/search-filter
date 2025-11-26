@@ -18,6 +18,6 @@ use Cake\Core\BasePlugin;
 /**
  * Plugin for SearchFilter
  */
-class Plugin extends BasePlugin
+class SearchFilterPlugin extends BasePlugin
 {
 }
